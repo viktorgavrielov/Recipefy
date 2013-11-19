@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
@@ -10,10 +10,31 @@
         android:id="@+id/ingredientsBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:ems="10"
-        android:text="@string/ingredients" >
+        android:completionHint="@string/ingredients"
+        android:singleLine="true"
+         >
 
         <requestFocus />
     </AutoCompleteTextView>
 
-</FrameLayout>
+    <ListView
+        android:id="@+id/ingredientslist"
+        android:layout_width="match_parent"
+        android:layout_height="426dp"
+        android:layout_below="@id/ingredientsBar" >
+
+    </ListView>
+
+    <Button
+        android:id="@+id/recipefyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/ingredientslist"
+        android:text="@string/recipefy" />
+
+</RelativeLayout>

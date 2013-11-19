@@ -1,30 +1,47 @@
 package com.recipefy;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.os.Bundle;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
-import android.view.Gravity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class IngredientInput extends FragmentActivity implements
-		ActionBar.OnNavigationListener {
+		ActionBar.OnNavigationListener, TextWatcher {
 
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * current dropdown position.
 	 */
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+	private ArrayAdapter<String> _adapter;
+	private ArrayList<String> _ingredients;
+	private ArrayList<String> _pantry;
+	private String[] _ingredientsArray;
+	protected List<String> _updateList;
+	protected IngredientInput input;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +62,87 @@ public class IngredientInput extends FragmentActivity implements
 								getString(R.string.title_section1),
 								getString(R.string.title_section2),
 								getString(R.string.title_section3), }), this);
+		ListView listView= (ListView) findViewById(R.id.ingredientslist);
+		_pantry = new ArrayList<String>();
+		input = this;
+		try{
+	        InputStream instream = getAssets().open("ingredients.txt");
+
+	            InputStreamReader inputreader = new InputStreamReader(instream);
+	            BufferedReader buffreader = new BufferedReader(inputreader);
+
+
+	            ArrayList<String> lines = new ArrayList<String>();
+	            boolean hasNextLine =true;
+	            while (hasNextLine){
+	                String line =  buffreader.readLine();
+	                lines.add(line);
+	                hasNextLine = line != null;
+
+	            }
+	            lines.remove(lines.size()-1);
+	            _ingredients = lines;
+	            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,_pantry);
+
+	            listView.setAdapter(adapter);
+	            //listView.setVisibility(View.GONE);
+	            _adapter = adapter;
+
+	        instream.close();
+	        SwipeDismissListener touchListener =
+			          new SwipeDismissListener(
+			                  listView,
+			                  new SwipeDismissListener.DismissCallbacks() {
+			                	  
+			                	  public boolean canDismiss(int position){
+			                		  return true;
+			                	  }
+			                      public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+			                          for (int position : reverseSortedPositions) {
+			                              adapter.remove(adapter.getItem(position));
+			                          }
+			                          adapter.notifyDataSetChanged();
+			                      }
+			                  });
+			  listView.setOnTouchListener(touchListener);
+			  listView.setOnScrollListener(touchListener.makeScrollListener());
+
+	    }
+	    catch(java.io.FileNotFoundException e){
+
+	    }catch(java.io.IOException e){
+
+	    }	
+		//setTheme(android.R.style.Theme);
+		final AutoCompleteTextView autocomplete = (AutoCompleteTextView) findViewById(R.id.ingredientsBar);
+		//final String[] testStrings = new String[] {"chocolate","cake","chicken","chowder","apple","banana","paper","test"};
+		final String[] autoStrings = _ingredients.toArray(new String[_ingredients.size()]);
+		_ingredientsArray = autoStrings;
+		ArrayAdapter<String> autoAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,autoStrings);
+		autocomplete.setThreshold(2);
+		autocomplete.addTextChangedListener(this);
+		autocomplete.setAdapter(autoAdapter);
+		autocomplete.setOnKeyListener(new OnKeyListener() {
+			  public boolean onKey(View view, int keyCode, KeyEvent event){
+				    if (event.getAction() == KeyEvent.ACTION_DOWN){
+				      switch (keyCode)
+				      {
+				        case KeyEvent.KEYCODE_DPAD_CENTER:
+				        case KeyEvent.KEYCODE_ENTER:
+				          List<String> toPass = new ArrayList<String>();
+				          toPass.add(autocomplete.getText().toString());
+				          input.updateAdapater(toPass);
+				          return true;
+				        default:
+				          break;
+				      }
+				    }
+				    return false;
+				  }
+				});
+	
 	}
+	
 
 	/**
 	 * Backward-compatible version of {@link ActionBar#getThemedContext()} that
@@ -96,6 +193,16 @@ public class IngredientInput extends FragmentActivity implements
 				.replace(R.id.container, fragment).commit();
 		return true;
 	}
+	
+	
+	public void updateAdapater(List<String> toAdd){
+		//_adapter.clear();
+		for(String item:toAdd){
+			_adapter.insert(item, _adapter.getCount());
+		}
+		_adapter.notifyDataSetChanged();
+		
+	}
 
 	/**
 	 * A dummy fragment representing a section of the app, but that simply
@@ -122,6 +229,37 @@ public class IngredientInput extends FragmentActivity implements
 					ARG_SECTION_NUMBER)));
 			return rootView;
 		}
+	}
+
+	@Override
+	public void afterTextChanged(Editable arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	protected void onPause(){
+		SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+		editor.putInt("array_size", _ingredientsArray.length);
+		for(int i=0;i<_ingredientsArray.length;i++){
+			editor.putString("array_"+i, _ingredientsArray[i]);
+		}
+		editor.commit();
 	}
 
 }
