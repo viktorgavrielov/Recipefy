@@ -35,6 +35,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/ingredientslist"
+        android:onClick="recipefy"
         android:text="@string/recipefy" />
 
 </RelativeLayout>

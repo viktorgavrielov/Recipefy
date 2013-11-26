@@ -9,6 +9,7 @@ import java.util.List;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +25,6 @@ import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -254,12 +254,18 @@ public class IngredientInput extends FragmentActivity implements
 	
 	@Override
 	protected void onPause(){
+		super.onPause();
 		SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
 		editor.putInt("array_size", _ingredientsArray.length);
 		for(int i=0;i<_ingredientsArray.length;i++){
 			editor.putString("array_"+i, _ingredientsArray[i]);
 		}
 		editor.commit();
+	}
+	
+	public void recipefy(View view){
+		Intent intent = new Intent(this,RecipeActivity.class);
+		this.startActivity(intent);
 	}
 
 }
