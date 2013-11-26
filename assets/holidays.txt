@@ -1,0 +1,12 @@
+holiday^holiday-christmas
+holiday^holiday-thanksgiving
+holiday^holiday-summer
+holiday^holiday-fall
+holiday^holiday-new-year
+holiday^holiday-super-bowl
+holiday^holiday-winter
+holiday^holiday-spring
+holiday^holiday-halloween
+holiday^holiday-hanukkah
+holiday^holiday-4th-of-july
+holiday^holiday-thanksgivukkah

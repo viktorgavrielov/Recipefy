@@ -1,0 +1,5 @@
+386^Vegan
+387^Lacto-ovo vegetarian
+388^Lacto vegetarian
+389^Ovo vegetarian
+390^Pescetarian

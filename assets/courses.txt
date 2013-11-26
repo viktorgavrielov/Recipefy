@@ -1,0 +1,12 @@
+course^course-Main Dishes
+course^course-Desserts
+course^course-Side Dishes
+course^course-Lunch and Snacks
+course^course-Appetizers
+course^course-Salads
+course^course-Breakfast and Brunch
+course^course-Breads
+course^course-Soups
+course^course-Beverages
+course^course-Condiments and Sauces
+course^course-Cocktails
