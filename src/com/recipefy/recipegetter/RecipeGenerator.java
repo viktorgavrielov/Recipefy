@@ -289,9 +289,11 @@ public class RecipeGenerator {
 		ArrayList<String> allowedCuisine = new ArrayList<String>();
 		ArrayList<String> allowedHoliday = new ArrayList<String>();
 		
-//		allowedIngredients.add("noodles");
-//		allowedIngredients.add("cheese");
-//		allowedIngredients.add("tomatoes");
+		allowedIngredients.add("chicken");
+		allowedIngredients.add("cheese");
+		allowedIngredients.add("tomatoes");
+		allowedIngredients.add("pasta");
+		
 //		
 //		excludeIngredients.add("chicken");
 //		
@@ -301,7 +303,7 @@ public class RecipeGenerator {
 //		
 //		allowedCuisine.add("cuisine^cuisine-italian");
 		
-		allowedHoliday.add("holiday^holiday-new-year");
+//		allowedHoliday.add("holiday^holiday-new-year");
 		
 		
 		
@@ -320,6 +322,11 @@ public class RecipeGenerator {
 			
 			for(RecipeData recipe : recipes){
 				System.out.println(recipe.getRecipeName());
+				System.out.println(recipe.getRecipeID());
+				for(String ingredient : recipe.getIngredientsNeeded()){
+					System.out.println("  " + ingredient);
+				}
+				System.out.println();
 			}
 		} catch (UnknownHostException e) {
 			System.err.println("No internet connection!");
