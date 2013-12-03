@@ -12,14 +12,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.StrictMode;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,12 +28,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RecipeGenerator {
 	
+	
+	
 	public static enum FilterValue {ALLOWED_INGREDIENT, EXCLUDED_INGREDIENT, ALLOWED_ALLERGY, ALLOWED_DIET,
 		ALLOWED_CUISINE, EXCLUDED_CUISINE, ALLOWED_COURSE, EXCLUDED_COURSE, ALLOWED_HOLIDAY, EXCLUDED_HOLIDAY};
 	
 	private final static String APP_ID = "19a2011d";
 	private final static String APP_KEY = "4e39e4ef08c4f42716d2c4abc0a85683";
-	private final static String MAX_RESULTS = "50";
+	private final static String MAX_RESULTS = "20";
+	
+	
 	
 	/**
 	 * 
@@ -40,16 +45,21 @@ public class RecipeGenerator {
 	 * @return a list of RecipeData
 	 * @throws UnknownHostException in case there is no Internet connection
 	 * @throws IOException for all other issues with HTTP IO or JSON parsing
+	 * @throws URISyntaxException 
+	 * @throws IllegalStateException 
 	 */
-	public List<RecipeData> getRecipes(Map<FilterValue, List<String>> searchParams) throws UnknownHostException, IOException{
+	public List<RecipeData> getRecipes(Map<FilterValue, List<String>> searchParams) throws UnknownHostException, IOException, IllegalStateException, URISyntaxException{
 
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy);
+		
 		List<RecipeData> recipes;
 	
 		// generate the URI for the API call
-		URI uri = uriBuilder(searchParams);
+		Uri uri = uriBuilder(searchParams);
 		
 		// obtain response
-		String searchResponseJson = obtainResponseJson(uri);
+		String searchResponseJson = obtainResponseJson((new java.net.URI(uri.toString())));
 
 		//parse the JSON and build Recipe Data:		
 		recipes = makeRecipeData(searchResponseJson);
@@ -68,9 +78,10 @@ public class RecipeGenerator {
 	private String obtainResponseJson(URI uri) throws IllegalStateException, IOException {
 		
 		// HTTP connection generation
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+
+		DefaultHttpClient httpclient = new DefaultHttpClient();
 		HttpGet httpget = new HttpGet(uri);
-		CloseableHttpResponse response = httpclient.execute(httpget);
+		HttpResponse response = httpclient.execute(httpget);
 		InputStream responseStream = response.getEntity().getContent();
 
 		// reading the response Stream
@@ -80,7 +91,6 @@ public class RecipeGenerator {
 			searchResponseJson += Character.valueOf((char) ch);
 		}
 		
-		response.close();
 		
 		return searchResponseJson;
 	}
@@ -188,90 +198,84 @@ public class RecipeGenerator {
 	 * @param searchParams
 	 * @return the URI for the API call
 	 */
-	private URI uriBuilder(Map<FilterValue, List<String>> searchParams){
-		try {
-			URIBuilder uriBuilder = new URIBuilder();
+	private Uri uriBuilder(Map<FilterValue, List<String>> searchParams){
+		Uri uri = Uri.parse("https://api.yummly.com");
+		Uri.Builder uriBuilder = uri.buildUpon();
+		
+		uriBuilder//.scheme("https")
+		.path("/v1/api/recipes")
+		.appendQueryParameter("_app_id", APP_ID)
+		.appendQueryParameter("_app_key", APP_KEY)
+		.appendQueryParameter("maxResult", MAX_RESULTS)
+		.appendQueryParameter("requirePictures", "true");
+		
+		List<String> paramVals;
+		
+		for(FilterValue filterval : searchParams.keySet()){
+			paramVals = searchParams.get(filterval);
 			
-			uriBuilder.setScheme("https")
-	        .setHost("api.yummly.com")
-	        .setPath("/v1/api/recipes")
-	        .setParameter("_app_id", APP_ID)
-	        .setParameter("_app_key", APP_KEY)
-	        .setParameter("maxResult", MAX_RESULTS)
-	        .setParameter("requirePictures", "true");
+			switch(filterval) {				
 			
-			List<String> paramVals;
-			
-			for(FilterValue filterval : searchParams.keySet()){
-				paramVals = searchParams.get(filterval);
-				
-				switch(filterval) {				
-				
-				case ALLOWED_ALLERGY:
-					for(String allergy : paramVals){
-						uriBuilder.addParameter("allowedAllergy[]", allergy);
-					}
-					break;
-				case ALLOWED_COURSE:
-					for(String course : paramVals){
-						uriBuilder.addParameter("allowedCourse[]", course);
-					}
-					break;
-				case ALLOWED_CUISINE:
-					for(String cuisine : paramVals){
-						uriBuilder.addParameter("allowedCuisine[]", cuisine);
-					}
-					break;
-				case ALLOWED_DIET:
-					for(String diet : paramVals){
-						uriBuilder.addParameter("allowedDiet[]", diet);
-					}
-					break;
-				case ALLOWED_HOLIDAY:
-					for(String holiday : paramVals){
-						uriBuilder.addParameter("allowedHoliday[]", holiday);
-					}
-					break;
-				case ALLOWED_INGREDIENT:
-					for(String ingredient : paramVals){
-						uriBuilder.addParameter("allowedIngredient[]", ingredient);
-					}					
-					break;
-					
-					
-				case EXCLUDED_COURSE:
-					for(String course : paramVals){
-						uriBuilder.addParameter("excludedCourse[]", course);
-					}
-					break;
-				case EXCLUDED_CUISINE:
-					for(String cuisine : paramVals){
-						uriBuilder.addParameter("excludedCuisine[]", cuisine);
-					}
-					break;
-				case EXCLUDED_HOLIDAY:
-					for(String holiday : paramVals){
-						uriBuilder.addParameter("excludedHoliday[]", holiday);
-					}
-					break;
-				case EXCLUDED_INGREDIENT:
-					for(String ingredient : paramVals){
-						uriBuilder.addParameter("excludedIngredient[]", ingredient);
-					}
-					break;
-				default:
-					System.err.println("Unknown Parameter " + filterval + " in search query.");
-					break;
+			case ALLOWED_ALLERGY:
+				for(String allergy : paramVals){
+					uriBuilder.appendQueryParameter("allowedAllergy[]", allergy);
 				}
+				break;
+			case ALLOWED_COURSE:
+				for(String course : paramVals){
+					uriBuilder.appendQueryParameter("allowedCourse[]", course);
+				}
+				break;
+			case ALLOWED_CUISINE:
+				for(String cuisine : paramVals){
+					uriBuilder.appendQueryParameter("allowedCuisine[]", cuisine);
+				}
+				break;
+			case ALLOWED_DIET:
+				for(String diet : paramVals){
+					uriBuilder.appendQueryParameter("allowedDiet[]", diet);
+				}
+				break;
+			case ALLOWED_HOLIDAY:
+				for(String holiday : paramVals){
+					uriBuilder.appendQueryParameter("allowedHoliday[]", holiday);
+				}
+				break;
+			case ALLOWED_INGREDIENT:
+				for(String ingredient : paramVals){
+					uriBuilder.appendQueryParameter("allowedIngredient[]", ingredient);
+				}					
+				break;
+				
+				
+			case EXCLUDED_COURSE:
+				for(String course : paramVals){
+					uriBuilder.appendQueryParameter("excludedCourse[]", course);
+				}
+				break;
+			case EXCLUDED_CUISINE:
+				for(String cuisine : paramVals){
+					uriBuilder.appendQueryParameter("excludedCuisine[]", cuisine);
+				}
+				break;
+			case EXCLUDED_HOLIDAY:
+				for(String holiday : paramVals){
+					uriBuilder.appendQueryParameter("excludedHoliday[]", holiday);
+				}
+				break;
+			case EXCLUDED_INGREDIENT:
+				for(String ingredient : paramVals){
+					uriBuilder.appendQueryParameter("excludedIngredient[]", ingredient);
+				}
+				break;
+			default:
+				System.err.println("Unknown Parameter " + filterval + " in search query.");
+				break;
 			}
-	        
-	        
-			return uriBuilder.build();
-			
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
 		}
-		return null;
+		
+		
+		return uriBuilder.build();
 	}
 
 	/**
@@ -331,6 +335,10 @@ public class RecipeGenerator {
 		} catch (UnknownHostException e) {
 			System.err.println("No internet connection!");
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 		

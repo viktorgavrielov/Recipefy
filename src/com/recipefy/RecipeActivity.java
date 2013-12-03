@@ -1,6 +1,7 @@
 package com.recipefy;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +59,7 @@ public class RecipeActivity extends Activity {
         }
         try {
 			List<RecipeData> data =generator.getRecipes(map);
+			System.out.println("DATA SIZE: " + data.size());
 			for(RecipeData recipe:data){
 				if(recipe.getPrepTimeSecs()!=0&&recipe.getRating()!=0.0f){
 					imageItems.add(new ImageItem(recipe.getImageSmall(),recipe.getRecipeName()));
@@ -67,6 +69,12 @@ public class RecipeActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
