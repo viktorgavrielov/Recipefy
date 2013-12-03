@@ -100,6 +100,7 @@ public class IngredientInput extends FragmentActivity implements
 			                      public void onDismiss(ListView listView, int[] reverseSortedPositions) {
 			                          for (int position : reverseSortedPositions) {
 			                              adapter.remove(adapter.getItem(position));
+			                              //_pantry.remove(position);
 			                          }
 			                          adapter.notifyDataSetChanged();
 			                      }
@@ -130,6 +131,7 @@ public class IngredientInput extends FragmentActivity implements
 				        case KeyEvent.KEYCODE_DPAD_CENTER:
 				        case KeyEvent.KEYCODE_ENTER:
 				          List<String> toPass = new ArrayList<String>();
+				          //_pantry.add(autocomplete.getText().toString());
 				          toPass.add(autocomplete.getText().toString());
 				          input.updateAdapater(toPass);
 				          return true;
@@ -265,6 +267,7 @@ public class IngredientInput extends FragmentActivity implements
 	
 	public void recipefy(View view){
 		Intent intent = new Intent(this,RecipeActivity.class);
+		intent.putStringArrayListExtra("ingredients", _pantry);
 		this.startActivity(intent);
 	}
 
