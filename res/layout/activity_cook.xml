@@ -9,8 +9,23 @@
     tools:context=".CookActivity" >
 
     <TextView
+        android:id="@+id/cooking_step"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="89dp"
+        android:onClick="onClick"
+        android:clickable="true"
         android:text="@string/hello_world" />
+
+    <Button
+        android:id="@+id/timer1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cooking_step"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="21dp"
+        android:text="Button" />
 
 </RelativeLayout>
