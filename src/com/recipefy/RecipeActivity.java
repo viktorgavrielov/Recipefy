@@ -1,5 +1,6 @@
 package com.recipefy;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
@@ -8,9 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.recipefy.recipegetter.RecipeData;
 import com.recipefy.recipegetter.RecipeGenerator;
@@ -21,6 +27,7 @@ public class RecipeActivity extends Activity {
 	 private GridView _gridView;
 	 private GridViewAdapter _customGridAdapter;
 	 private ArrayList<String> _ingredients;
+	 protected RecipeActivity _this;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +36,15 @@ public class RecipeActivity extends Activity {
 		_gridView = (GridView) findViewById(R.id.gridView);
         _customGridAdapter = new GridViewAdapter(this, R.layout.row_grid, this.getData());
         _gridView.setAdapter(_customGridAdapter);
+        _gridView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                int position, long id) {
+            	System.out.println("Clicking");
+                Toast.makeText(RecipeActivity.this, position + "#Selected",
+                        Toast.LENGTH_SHORT).show();
+            }
+     
+    });
         _ingredients = getIntent().getStringArrayListExtra("ingredients");
         System.out.println("List is: "+_ingredients);
         for(String item:_ingredients){
@@ -62,7 +78,18 @@ public class RecipeActivity extends Activity {
 			System.out.println("DATA SIZE: " + data.size());
 			for(RecipeData recipe:data){
 				if(recipe.getPrepTimeSecs()!=0&&recipe.getRating()!=0.0f){
-					imageItems.add(new ImageItem(recipe.getImageSmall(),recipe.getRecipeName()));
+					Bitmap image = recipe.getImageSmall();
+					ByteArrayOutputStream stream = new ByteArrayOutputStream();
+					image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+					byte[] byteArray = stream.toByteArray();
+					ImageItem item = new ImageItem(byteArray,recipe.getRecipeName());
+					item.setRating(recipe.getRating());
+					item.setTime(recipe.getPrepTimeSecs()/60);
+					float length = (float)_ingredients.size()/(float)recipe.getIngredientsNeeded().size();
+					int adjLength = (int) Math.ceil(length*100);
+					item.setMatch(adjLength+"%");
+					item.setIngredients(recipe.getIngredientsNeeded());
+					imageItems.add(item);
 				}
 			}
 		} catch (UnknownHostException e) {
@@ -98,6 +125,8 @@ public class RecipeActivity extends Activity {
         return imageItems;
  
     }
+	
+
 	
 	
 

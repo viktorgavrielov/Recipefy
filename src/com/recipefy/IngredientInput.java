@@ -8,6 +8,7 @@ import java.util.List;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,11 +21,15 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -270,5 +275,45 @@ public class IngredientInput extends FragmentActivity implements
 		intent.putStringArrayListExtra("ingredients", _pantry);
 		this.startActivity(intent);
 	}
+	
+	 /**
+     * Method to hide the Android soft keyboard when you click the screen.
+     * @param activity
+     */
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
+    
+    /**
+     * Method that sets up the keyboard disappearance when any other view is clicked. 
+     * @param view
+     */
+    public void setupUI(View view) {
+        //Set up touch listener for non-text box views to hide keyboard.
+        if(!(view instanceof EditText)) {
+
+            view.setOnTouchListener(new OnTouchListener() {
+
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(input);
+                    return false;
+                }
+
+            });
+        }
+        
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+
+                View innerView = ((ViewGroup) view).getChildAt(i);
+
+                setupUI(innerView);
+            }
+        }
+    }
 
 }

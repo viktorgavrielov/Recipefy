@@ -3,8 +3,8 @@
     package="com.recipefy"
     android:versionCode="1"
     android:versionName="1.0" >
-    
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -27,6 +27,14 @@
         <activity
             android:name="com.recipefy.RecipeActivity"
             android:label="@string/title_activity_recipe" >
+        </activity>
+        <activity
+            android:name="com.recipefy.SelectActivity"
+            android:label="@string/title_activity_select" >
+        </activity>
+        <activity
+            android:name="com.recipefy.CookActivity"
+            android:label="@string/title_activity_cook" >
         </activity>
     </application>
 

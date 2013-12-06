@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:layout_marginTop="5dp"
     android:orientation="vertical"
     android:padding="5dp"
@@ -11,11 +11,61 @@
  
     <ImageView
         android:id="@+id/image"
-        android:layout_width="100dp"
+        android:layout_width="fill_parent"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:layout_height="100dp" >
     </ImageView>
+    
+    <TableLayout 
+    android:id="@+id/tableLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    
+     <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dip" >
+    
+     <TextView
+        android:id="@+id/text2"
+        android:layout_column="1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:textSize="12sp" >
+    </TextView>
+    
+     <TextView
+        android:id="@+id/text3"
+        android:layout_column="2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:background="#D1EEEE"
+        android:gravity="center"
+        android:textSize="12sp" >
+    </TextView>
+    
+     <TextView
+        android:id="@+id/text4"
+        android:layout_column="3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:textSize="12sp" >
+    </TextView>
+    
+    </TableRow>
  
-    <TextView
+   
+    
+    </TableLayout>
+    
+     <TextView
         android:id="@+id/text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

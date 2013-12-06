@@ -10,5 +10,9 @@
     <string name="recipefy">Recipefy!</string>
     <string name="title_activity_recipe">RecipeActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_select">SelectActivity</string>
+    <string name="cookString">Cook</string>
+    <string name="recipeString">Recipes</string>
+    <string name="title_activity_cook">CookActivity</string>
 
 </resources>
