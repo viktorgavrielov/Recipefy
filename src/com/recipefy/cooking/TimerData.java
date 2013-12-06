@@ -9,6 +9,13 @@ public class TimerData {
 	private int initialTime;
 	private int snoozeTime;
 	
+	public TimerData(){}
+	
+	public TimerData(int initialTime, int snoozeTime){
+		this.initialTime = initialTime;
+		this.snoozeTime = snoozeTime;
+	}
+	
 	public int getInitialTime() {
 		return initialTime;
 	}

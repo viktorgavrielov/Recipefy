@@ -1,5 +1,6 @@
 package com.recipefy;
 
+import com.recipefy.cooking.TimerData;
 import com.recipefy.timer.Timer;
 
 import android.os.Bundle;
@@ -18,7 +19,7 @@ public class CookActivity extends Activity {
 		TextView text = (TextView) this.findViewById(R.id.cooking_step);
 		text.setText(Html.fromHtml("<b>Hello all</b> world!"));
 		
-		Timer timer = new Timer(this, (Button) this.findViewById(R.id.timer1), 15);
+		Timer timer = new Timer(this, (Button) this.findViewById(R.id.timer1), new TimerData(15, 3));
 		timer.start();
 		
 	}

@@ -1,6 +1,7 @@
 package com.recipefy.timer;
 
 import com.recipefy.CookActivity;
+import com.recipefy.cooking.TimerData;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,16 +11,45 @@ import android.widget.Toast;
 
 public class Timer extends Thread{
 
-	private int timeleft;
+	private TimerData timerdata;
 	private Button timerbutton;
 	Activity cook;
 
-	public Timer(Activity cook, Button timerbutton, int timeleft){
-		this.cook = cook;
+	public Timer(Activity cook, Button timerbutton, TimerData timerdata){
+		this.timerdata = timerdata;
 		this.timerbutton = timerbutton;
-		this.timeleft = timeleft;
+		this.cook = cook;		
 	}
+	
+	
+	/**
+	 * Returns a time string that is built up from the seconds passed in
+	 * i.e. 75 seconds ==> 01:15
+	 * @param seconds
+	 * @return
+	 */
+	private String getTimeString(int seconds){
+		int hours = seconds / 3600;
+		seconds -= hours * 3600;
+		int minutes = seconds / 60;
+		seconds -= minutes * 60;
 
+		String timeString = "";
+		if(hours > 0){
+			timeString += hours + ":";
+		}
+		if(minutes < 10){
+			timeString += "0";
+		}
+		timeString += minutes + ":";
+		if(seconds < 10){
+			timeString += "0";
+		}
+		timeString += seconds;
+		return timeString;
+	}
+	
+	
 	@Override
 	public void run() {
 		
@@ -29,26 +59,12 @@ public class Timer extends Thread{
 				toast.show();
 			}
 		});
+		
+		int timeleft = timerdata.getInitialTime();
 
 		while(timeleft > 0){
-			int seconds = timeleft;
-			int hours = seconds / 3600;
-			seconds -= hours * 3600;
-			int minutes = seconds / 60;
-			seconds -= minutes * 60;
-
-			String timeString = "";
-			if(hours > 0){
-				timeString += hours + ":";
-			}
-			if(minutes < 10){
-				timeString += "0";
-			}
-			timeString += minutes + ":";
-			if(seconds < 10){
-				timeString += "0";
-			}
-			timeString += seconds;
+			
+			String timeString = getTimeString(timeleft);
 
 			final String updateString = timeString;
 			cook.runOnUiThread(new Runnable() {
@@ -80,14 +96,16 @@ public class Timer extends Thread{
 				alertDialogBuilder
 				.setMessage("A timer is up!")
 				.setCancelable(false)				
-				.setPositiveButton("Snooze 01:00",new DialogInterface.OnClickListener() {
+				.setPositiveButton("Snooze " + getTimeString(timerdata.getSnoozeTime()),new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
-						(new Timer(cook, timerbutton, 60)).start();
+						(new Timer(cook, timerbutton, new TimerData(timerdata.getSnoozeTime(),(int) ((double) timerdata.getSnoozeTime()*.15)))).start();
 						dialog.cancel();
 					}
 				})
 				.setNeutralButton("Snooze custom", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
+						// TODO: this should open the custom timer dialog
+						// TODO: and also remove the current button
 						dialog.cancel();
 					}
 				})
