@@ -10,9 +10,18 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.res.AssetManager;
+
 public class CookingStepsGenerator {
 
 	private static final String RECIPE_FILE = "assets/recipes.txt";
+	private AssetManager assetmanager;
+
+	public CookingStepsGenerator(AssetManager assetmanager) {
+		this.assetmanager = assetmanager;
+	}
+	
+	public CookingStepsGenerator(){}
 
 	public List<CookingStep> getCookingSteps(String recipeID){
 
@@ -21,7 +30,7 @@ public class CookingStepsGenerator {
 		// get strings of cooking instrucitons based on recipeID
 		// TODO: right now it only returns a random recipe from a text file
 		List<String> rawInstructions = getInstructions(recipeID);
-		
+
 		// parse strings for potential timers and generate a list of 
 		// instances of CookingStep
 		cookingSteps = makeCookingSteps(rawInstructions);
@@ -43,8 +52,12 @@ public class CookingStepsGenerator {
 		List<ArrayList<String>> recipes = new ArrayList<ArrayList<String>>();		
 
 		try{
-
-			InputStreamReader inputreader = new InputStreamReader(new FileInputStream(RECIPE_FILE));
+			InputStreamReader inputreader;
+			if(assetmanager != null){
+				inputreader = new InputStreamReader(assetmanager.open("recipes.txt"));
+			} else {
+				inputreader = new InputStreamReader(new FileInputStream(RECIPE_FILE));
+			}
 			BufferedReader reader = new BufferedReader(inputreader);
 
 			try{
@@ -85,27 +98,27 @@ public class CookingStepsGenerator {
 	 */
 	private List<CookingStep> makeCookingSteps(List<String> rawInstructions){		
 		List<CookingStep> cookingSteps = new ArrayList<CookingStep>();
-		
+
 		for(String instruction : rawInstructions){
 			CookingStep step = new CookingStep();
 			step.setInstruction(instruction);
-			
+
 			String[] words = instruction.split(" ");
 			for(int i = 0; i < words.length; i++){
-					
+
 				if(words[i].contains("sec") || words[i].contains("min") || words[i].contains("hour")){	
 					int unitmult = words[i].contains("min") ? 60 : words[i].contains("hour") ? 3600 : 1;
 					try{
 						// immediately before sec/min/hour, i.e. "8 minutes"
 						int time = Integer.parseInt(words[i-1]);
-						
+
 						// 3 before sec/min/hour, i.e. "6 to 8 minutes"
 						int snoozetime = Math.max((int) ((double) time *.15), 1);
 						try{
 							snoozetime = time - Integer.parseInt(words[i-3]);
 							time = Integer.parseInt(words[i-3]);
 						} catch(Exception e){}
-						
+
 						TimerData timerdata = new TimerData();
 						timerdata.setInitialTime(time * unitmult);
 						timerdata.setSnoozeTime(snoozetime * unitmult);
@@ -115,10 +128,10 @@ public class CookingStepsGenerator {
 			}
 			cookingSteps.add(step);
 		}
-		
+
 		return cookingSteps;
 	}
-	
+
 	/**
 	 * TESTING PURPOSE ONLY
 	 * @param args
@@ -129,9 +142,9 @@ public class CookingStepsGenerator {
 		for(String step : gen.getInstructions("")){
 			System.out.println(step);
 		}
-		
+
 		System.out.println();
-		
+
 		for(CookingStep step : gen.getCookingSteps("")){
 			System.out.println("STEP: " + step.getInstruction());
 			for(TimerData timer : step.getTimers()){

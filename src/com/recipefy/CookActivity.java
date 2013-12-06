@@ -1,5 +1,10 @@
 package com.recipefy;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.recipefy.cooking.CookingStep;
+import com.recipefy.cooking.CookingStepsGenerator;
 import com.recipefy.cooking.TimerData;
 import com.recipefy.timer.Timer;
 
@@ -19,7 +24,16 @@ public class CookActivity extends Activity {
 		TextView text = (TextView) this.findViewById(R.id.cooking_step);
 		text.setText(Html.fromHtml("<b>Hello all</b> world!"));
 		
-		Timer timer = new Timer(this, (Button) this.findViewById(R.id.timer1), new TimerData(15, 3));
+		CookingStepsGenerator csgenerator = new CookingStepsGenerator(getAssets());
+		
+		// returns an arraylist
+		List<CookingStep> cookingsteps = csgenerator.getCookingSteps("a dummy recipe id");
+		
+		// set the textview text to the first CookingStep instruction in the arraylist
+		text.setText(cookingsteps.get(0).getInstruction());
+		
+		// start a timer with the first TimerData instance of the CookingStep
+		Timer timer = new Timer(this, (Button) this.findViewById(R.id.timer1), cookingsteps.get(0).getTimers().get(0));
 		timer.start();
 		
 	}
