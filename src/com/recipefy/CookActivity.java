@@ -15,14 +15,18 @@ import com.recipefy.cooking.CookingStep;
 import com.recipefy.cooking.CookingStepsGenerator;
 import com.recipefy.cooking.TimerData;
 import com.recipefy.timer.Timer;
+import com.recipefy.timer.TimerClickHandler;
 
 public class CookActivity extends Activity {
-	
+
 	private List<CookingStep> _steps;
 	private int _currStep;
 	private Timer _timer1;
 	private Timer _timer2;
 	private Timer _timer3;
+	private TimerData _timerdata1;
+	private TimerData _timerdata2;
+	private TimerData _timerdata3;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,39 +45,68 @@ public class CookActivity extends Activity {
 		// set the textview text to the first CookingStep instruction in the arraylist
 		text.setText(cookingsteps.get(0).getInstruction());
 		text.setOnTouchListener(new TouchListener(text));
-		// start a timer with the first TimerData instance of the CookingStep
-		_timer1 = new Timer(this, (TextView) this.findViewById(R.id.timer2), cookingsteps.get(0).getTimers().get(0));
-		if(cookingsteps.get(0).getTimers().size()>1){
-			_timer2 = new Timer(this, (TextView) this.findViewById(R.id.timer1), cookingsteps.get(0).getTimers().get(1));
-			TextView start2 = (TextView) findViewById(R.id.startView1);
-			start2.setText("Start"+" "+_timer2.getTimeString(cookingsteps.get(0).getTimers().get(1).getInitialTime()));
-			start2.setVisibility(View.VISIBLE);
-			if(cookingsteps.get(0).getTimers().size()>2){
-				_timer3 = new Timer(this, (TextView) this.findViewById(R.id.timer3), cookingsteps.get(0).getTimers().get(2));
-				TextView start3 = (TextView) findViewById(R.id.startView3);
-				start3.setText("Start"+" "+_timer3.getTimeString(cookingsteps.get(0).getTimers().get(2).getInitialTime()));
-				start3.setVisibility(View.VISIBLE);
-			}
-		}
-		System.out.println("Timer 1 is: "+_timer1);
-		TextView start1 = (TextView) findViewById(R.id.startView2);
-		start1.setText("Start"+" "+_timer1.getTimeString(cookingsteps.get(0).getTimers().get(0).getInitialTime()));
-		//_timer1.start();
 		
+		_timerdata1 = new TimerData(0,0);
+		_timerdata2 = new TimerData(0,0);
+		_timerdata3 = new TimerData(0,0);
+		
+		TextView leftTimer = (TextView) this.findViewById(R.id.timer1);
+		TextView middleTimer = (TextView) this.findViewById(R.id.timer2);
+		TextView rightTimer = (TextView) this.findViewById(R.id.timer3);
+		
+		_timer1 = new Timer(this, leftTimer, _timerdata1);
+		_timer2 = new Timer(this, middleTimer, _timerdata2);
+		_timer3 = new Timer(this, rightTimer, _timerdata3);
+		
+		leftTimer.setOnClickListener(new TimerClickHandler(this, _timer1, leftTimer));
+		middleTimer.setOnClickListener(new TimerClickHandler(this, _timer2, middleTimer));
+		rightTimer.setOnClickListener(new TimerClickHandler(this, _timer3, rightTimer));
+
+		changeStartButtons(0);
+
+
+	}	
+	
+	public void startTimer1(View view){
+		startTimer(_timerdata1);
 	}
 	
+	public void startTimer2(View view){
+		startTimer(_timerdata2);
+	}
 	
+	public void startTimer3(View view){
+		startTimer(_timerdata3);
+	}
+
+	public void startTimer(TimerData timerdata){
+		TextView leftTimer = (TextView) this.findViewById(R.id.timer1);
+		TextView middleTimer = (TextView) this.findViewById(R.id.timer2);
+		TextView rightTimer = (TextView) this.findViewById(R.id.timer3);
+		if(leftTimer.getText().equals(getResources().getString(R.string.defTimerString1))) {
+			_timer1 = new Timer(this, leftTimer, timerdata);
+			_timer1.start();
+		} else if(middleTimer.getText().equals(getResources().getString(R.string.defTimerString2))) {
+			_timer2 = new Timer(this, middleTimer, timerdata);
+			_timer2.start();
+		} else if(rightTimer.getText().equals(getResources().getString(R.string.defTimerString3))) {
+			_timer3 = new Timer(this, rightTimer, timerdata);
+			_timer3.start();
+		}
+	}
+
 	private class TouchListener implements OnTouchListener {
-		
+
 		private TextView _view;
-		
+
 		public TouchListener(TextView view){
-			 _view = view;
+			_view = view;
 		}
 
 
 		@Override
-		public boolean onTouch(View arg0, MotionEvent arg1) {
+		public boolean onTouch(View arg0, MotionEvent arg1) {		
+			
 			Display display = getWindowManager().getDefaultDisplay();
 
 			DisplayMetrics metrics = new DisplayMetrics();
@@ -88,60 +121,50 @@ public class CookActivity extends Activity {
 					_currStep--;
 				}
 				_view.setText(_steps.get(_currStep).getInstruction());
-				
+
 
 			} else {
-			if(_currStep<=_steps.size()-1){
-				_currStep++;
-			}
-			_view.setText(_steps.get(_currStep).getInstruction());
+				if(_currStep < _steps.size()-1){
+					_currStep++;
+				}
+				_view.setText(_steps.get(_currStep).getInstruction());
 
 			}
-			
-			List<TimerData> timerList = _steps.get(_currStep).getTimers();
-			for(TimerData timer:timerList){
-				if(_timer1==null){
-					_timer1 =  new Timer(CookActivity.this, (TextView) CookActivity.this.findViewById(R.id.timer2), timer);
-					TextView start1 = (TextView) findViewById(R.id.startView2);
-					start1.setText("Start"+" "+_timer1.getTimeString(timer.getInitialTime()));
-				}
-				else if(_timer2==null){
-					_timer2 = new Timer(CookActivity.this, (TextView) CookActivity.this.findViewById(R.id.timer1), timer);
-					TextView start2 = (TextView) findViewById(R.id.startView1);
-					start2.setText("Start"+" "+_timer2.getTimeString(timer.getInitialTime()));
-					start2.setVisibility(View.VISIBLE);
-					
-				}
-				else if(_timer3==null){
-					_timer3 = new Timer(CookActivity.this, (TextView) CookActivity.this.findViewById(R.id.timer3), timer);
-					TextView start3 = (TextView) findViewById(R.id.startView3);
-					start3.setText("Start"+" "+_timer3.getTimeString(timer.getInitialTime()));
-					start3.setVisibility(View.VISIBLE);
-				}
-			}
+
+			changeStartButtons(_currStep);
 
 			return false;
 		}
 
 	}
 	
-	public void startTimer1(View view){
-		if(_timer1!=null){
-			_timer1.start();
+	private void changeStartButtons(int index){
+		TextView start1 = (TextView) this.findViewById(R.id.startView1);
+		TextView start2 = (TextView) this.findViewById(R.id.startView2);
+		TextView start3 = (TextView) this.findViewById(R.id.startView3);
+		start1.setVisibility(View.INVISIBLE);
+		start2.setVisibility(View.INVISIBLE);
+		start3.setVisibility(View.INVISIBLE);
+		_timerdata1 = _timerdata2 = _timerdata3 = null;
+		
+		List<TimerData> timerList = _steps.get(_currStep).getTimers();
+		for(TimerData timer:timerList){
+			if(start1.getVisibility() == View.INVISIBLE){
+				_timerdata1 = timer;
+				start1.setText("Start"+" "+_timer1.getTimeString(timer.getInitialTime()));
+				start1.setVisibility(View.VISIBLE);
+			}
+			else if(start2.getVisibility() == View.INVISIBLE){
+				_timerdata2 = timer;
+				start2.setText("Start"+" "+_timer2.getTimeString(timer.getInitialTime()));
+				start2.setVisibility(View.VISIBLE);
+			}
+			else if(start3.getVisibility() == View.INVISIBLE){
+				_timerdata3 = timer;
+				start3.setText("Start"+" "+_timer3.getTimeString(timer.getInitialTime()));
+				start3.setVisibility(View.VISIBLE);
+			}
 		}
 	}
-	
-	public void startTimer2(View view){
-		if(_timer2!=null){
-			_timer2.start();
-		}
-	}
-	
-	public void startTimer3(View view){
-		if(_timer3!=null){
-			_timer3.start();
-		}
-	}
-
 
 }

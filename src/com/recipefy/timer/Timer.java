@@ -1,13 +1,14 @@
 package com.recipefy.timer;
 
-import com.recipefy.CookActivity;
+
+
 import com.recipefy.cooking.TimerData;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class Timer extends Thread{
@@ -15,14 +16,16 @@ public class Timer extends Thread{
 	private TimerData timerdata;
 	private TextView timerbutton;
 	Activity cook;
+	private boolean isPaused;
 
-	public Timer(Activity cook, TextView textView, TimerData timerdata){
+	public Timer(Activity cook, TextView timerbutton, TimerData timerdata){
 		this.timerdata = timerdata;
-		this.timerbutton = textView;
-		this.cook = cook;		
+		this.timerbutton = timerbutton;
+		this.cook = cook;	
+		this.isPaused = false;
 	}
-	
-	
+
+
 	/**
 	 * Returns a time string that is built up from the seconds passed in
 	 * i.e. 75 seconds ==> 01:15
@@ -49,42 +52,51 @@ public class Timer extends Thread{
 		timeString += seconds;
 		return timeString;
 	}
-	
-	
+
+
 	@Override
 	public void run() {
-		
+
+		// show toaster
 		cook.runOnUiThread(new Runnable() {
 			public void run() {
 				Toast toast = Toast.makeText(cook, "Timer started!", Toast.LENGTH_SHORT);
 				toast.show();
 			}
 		});
-		
+
 		int timeleft = timerdata.getInitialTime();
 
 		while(timeleft > 0){
-			
-			String timeString = getTimeString(timeleft);
 
-			final String updateString = timeString;
-			cook.runOnUiThread(new Runnable() {
-				public void run() {
-					timerbutton.setText(updateString);
-				}
-			});
+			if(!isPaused){
+				String timeString = getTimeString(timeleft);
+
+				final String updateString = timeString;
+				cook.runOnUiThread(new Runnable() {
+					public void run() {
+						timerbutton.setText(updateString);
+					}
+				});
+				timeleft--;
+			}
 
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				System.err.println("Timer interrupted!");
-			}
-			timeleft--;
+				return;
+			}			
 		}
-		
-		
+
 
 		// DIALOG AFTER TIME RAN OUT
+		showTimeUpDialog();
+
+
+
+	}
+	
+	private void showTimeUpDialog(){
 		cook.runOnUiThread(new Runnable() {
 			public void run() {
 				timerbutton.setText("00:00");
@@ -99,21 +111,27 @@ public class Timer extends Thread{
 				.setCancelable(false)				
 				.setPositiveButton("Snooze " + getTimeString(timerdata.getSnoozeTime()),new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
-						(new Timer(cook, timerbutton, new TimerData(timerdata.getSnoozeTime(),(int) ((double) timerdata.getSnoozeTime()*.15)))).start();
+						Timer timer = new Timer(cook, timerbutton, new TimerData(timerdata.getSnoozeTime(),(int) ((double) timerdata.getSnoozeTime()/10)));
+						timerbutton.setOnClickListener(new TimerClickHandler(cook, timer, timerbutton));
+						timer.start();
 						dialog.cancel();
 					}
 				})
 				.setNeutralButton("Snooze custom", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
 						// TODO: this should open the custom timer dialog
-						// TODO: and also remove the current button
+						// TODO: and also remove the current button?
 						dialog.cancel();
+						AlertDialog.Builder timepickerDialogBuilder = numpickerAlertGenerator(Timer.this);
+						AlertDialog timepickerdialog = timepickerDialogBuilder.create();
+						timepickerdialog.show();				
+						
 					}
 				})
 				.setNegativeButton("Close",new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
 						// TODO: this should remove the button
-						timerbutton.setEnabled(false);
+						timerbutton.setText("--:--");
 						dialog.cancel();
 					}
 				});
@@ -123,10 +141,59 @@ public class Timer extends Thread{
 
 				// show it
 				alertDialog.show();
+				
 			}
 
 		});
+	}
 
+	public AlertDialog.Builder numpickerAlertGenerator (final Timer timer){
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(cook);
+
+		final TimePicker timepicker = new TimePicker(cook);
+		timepicker.setIs24HourView(true);
+		timepicker.setCurrentHour(timerdata.getSnoozeTime() / 3600);
+		timepicker.setCurrentMinute((timerdata.getSnoozeTime() - timepicker.getCurrentHour() * 3600) / 60);
+
+		// set title
+		alertDialogBuilder.setTitle("Pick hours and/or minutes!");
+
+		// set dialog message
+		alertDialogBuilder
+		.setView(timepicker)
+		.setCancelable(false)				
+		.setPositiveButton("Set Timer",new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog,int id) {
+				int seconds = timepicker.getCurrentHour() * 3600 + timepicker.getCurrentMinute() * 60;
+				dialog.cancel();
+				if(seconds > 0){
+					Timer timer = new Timer(cook, timerbutton, new TimerData(seconds,(int) ((double) seconds/10)));
+					timerbutton.setOnClickListener(new TimerClickHandler(cook, timer, timerbutton));
+					timer.start();
+				}				
+			}
+		})
+		.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog,int id) {
+				dialog.cancel();
+				if(timerbutton.getText().equals("--:--") || timerbutton.getText().equals("-- : --")){
+					return;
+				}
+				timer.showTimeUpDialog();
+			}
+		});
+
+
+
+		return alertDialogBuilder;
+	}
+
+	public boolean isPaused() {
+		return isPaused;
+	}
+
+	public void setPaused(boolean isPaused) {
+		this.isPaused = isPaused;
 	}
 
 }

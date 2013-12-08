@@ -176,7 +176,9 @@ public class RecipeGenerator {
 
 			for(int i = 0; i < bmgarray.length; i++){
 				try {
-					bmgarray[i].join();
+					if(bmgarray[i] != null){
+						bmgarray[i].join();
+					}
 				} catch (InterruptedException e) {
 					// can't do anything!
 				}

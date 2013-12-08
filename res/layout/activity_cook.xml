@@ -17,7 +17,7 @@
         android:clickable="true"
         android:gravity="center"
         android:onClick="onClick"
-        android:text="@string/defTimerString" />
+        android:text="@string/defTimerString1" />
 
 
 
@@ -50,22 +50,23 @@
         android:layout_alignParentBottom="true"
         android:clickable="true"
         android:gravity="center"
-        android:text="@string/defTimerString"
+        android:text="@string/emptyString"
         android:visibility="invisible"
-        android:onClick="startTimer2" />
+        android:onClick="startTimer1" />
           
         <TextView
-        android:id="@+id/startView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignBaseline="@+id/startView3"
-        android:layout_alignBottom="@+id/startView3"
-        android:layout_centerHorizontal="true"
-        android:clickable="true"
-        android:gravity="center"
-        android:onClick="startTimer1"
-        android:text="@string/defTimerString" />
+            android:id="@+id/startView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/startView3"
+            android:layout_alignBottom="@+id/startView3"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="startTimer2"
+            android:visibility="invisible"
+            android:text="@string/emptyString" />
         
         <TextView
         android:id="@+id/startView3"
@@ -79,7 +80,7 @@
         android:clickable="true"
         android:onClick="startTimer3"
         android:visibility="invisible"
-        android:text="@string/defTimerString3" />
+        android:text="@string/emptyString" />
 
         <TextView
             android:id="@+id/stepsView"
