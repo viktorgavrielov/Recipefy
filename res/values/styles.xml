@@ -26,6 +26,10 @@
     <item name="android:fontFamily">sans-serif-light</item>
 </style>
 
+<style name="customButton1" parent="android:Widget">
+    <item name="android:background">@drawable/custombutton1</item>
+</style>
+
 <style name="RobotoButtonStyle" parent="android:Widget.Holo.Button">
     <item name="android:fontFamily">sans-serif-light</item>
 </style>

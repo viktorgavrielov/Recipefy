@@ -6,12 +6,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher.ViewFactory;
 
 import com.recipefy.cooking.CookingStep;
 import com.recipefy.cooking.CookingStepsGenerator;
@@ -43,8 +48,13 @@ public class CookActivity extends Activity {
 		
 		// set background
 		findViewById(R.id.cookactivity).setBackgroundResource(R.drawable.background1);
-		
-		TextView text = (TextView) this.findViewById(R.id.stepsView);
+		Animation in = AnimationUtils.loadAnimation(this,
+				android.R.anim.fade_in);
+				Animation out = AnimationUtils.loadAnimation(this,
+				android.R.anim.fade_out);
+		in.setDuration(1500);
+		out.setDuration(500);
+		final TextSwitcher text = (TextSwitcher) this.findViewById(R.id.stepsView);
 		//text.setText(Html.fromHtml("<b>Hello all</b> world!"));
 		CookingStepsGenerator csgenerator = new CookingStepsGenerator(getAssets());
 		// returns an arraylist
@@ -55,8 +65,21 @@ public class CookActivity extends Activity {
 		_steps = cookingsteps;
 		_currStep = 0;
 		// set the textview text to the first CookingStep instruction in the arraylist
+		text.setFactory(new ViewFactory() {
+
+			@Override
+			public View makeView() {
+			TextView t = new TextView(CookActivity.this);
+			t.setOnTouchListener(new TouchListener(text));
+			t.setGravity(Gravity.CENTER);
+			return t;
+			}
+			});
+		text.setInAnimation(in);
+		text.setOutAnimation(out);
+		findViewById(R.id.cookactivity).setOnTouchListener(new TouchListener(text));
 		text.setText(cookingsteps.get(0).getInstruction());
-		text.setOnTouchListener(new TouchListener(text));
+		//text.setOnTouchListener(new TouchListener(text));
 		
 		_timerdata1 = new TimerData(0,0);
 		_timerdata2 = new TimerData(0,0);
@@ -113,10 +136,10 @@ public class CookActivity extends Activity {
 
 	private class TouchListener implements OnTouchListener {
 
-		private TextView _view;
+		private TextSwitcher _view;
 
-		public TouchListener(TextView view){
-			_view = view;
+		public TouchListener(TextSwitcher text){
+			_view = text;
 		}
 
 

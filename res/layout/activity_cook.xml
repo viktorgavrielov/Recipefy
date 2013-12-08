@@ -11,6 +11,7 @@
 
     <TextView
         android:id="@+id/timer1"
+        style="@style/customButton1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -24,6 +25,7 @@
 
     <TextView
         android:id="@+id/timer2"
+        style="@style/customButton1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/timer3"
@@ -34,6 +36,7 @@
 
     <TextView
         android:id="@+id/timer3"
+        style="@style/customButton1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/timer1"
@@ -45,6 +48,7 @@
    
        <TextView
         android:id="@+id/startView1"
+        style="@style/customButton1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -57,6 +61,7 @@
           
         <TextView
             android:id="@+id/startView2"
+            style="@style/customButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/startView3"
@@ -71,6 +76,7 @@
         
         <TextView
         android:id="@+id/startView3"
+        style="@style/customButton1"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -83,7 +89,7 @@
         android:visibility="invisible"
         android:text="@string/emptyString" />
 
-        <TextView
+        <TextSwitcher
             android:id="@+id/stepsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
