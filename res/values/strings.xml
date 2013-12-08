@@ -6,7 +6,7 @@
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
-    <string name="ingredients">Type an ingredient...</string>
+    <string name="ingredients">Enter an ingredient</string>
     <string name="recipefy">Recipefy!</string>
     <string name="title_activity_recipe">RecipeActivity</string>
     <string name="hello_world">Hello world!</string>

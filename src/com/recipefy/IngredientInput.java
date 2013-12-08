@@ -156,6 +156,7 @@ public class IngredientInput extends FragmentActivity implements
 				});
 		//setupUI(findViewById(R.id.ingredientcontainer));
 		autocomplete.setBackgroundResource(R.drawable.customshape);
+		autocomplete.setHint(R.string.ingredients);
 	}
 	
 
