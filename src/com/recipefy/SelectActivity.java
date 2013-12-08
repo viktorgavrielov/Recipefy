@@ -19,11 +19,21 @@ public class SelectActivity extends Activity {
 	
 	private ImageItem _item;
 	List<CharSequence> _toPass;
+	
+	// getting rid of the three dots
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu){
+		return false;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_select);
+		
+		//set background
+		findViewById(R.id.TableLayout1).setBackgroundResource(R.drawable.background1);
+
 		_toPass = new ArrayList<CharSequence>();
 		_item = (ImageItem) getIntent().getSerializableExtra("item");
 		ImageView view = (ImageView) this.findViewById(R.id.bigPicture);

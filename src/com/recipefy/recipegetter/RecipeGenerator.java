@@ -173,6 +173,8 @@ public class RecipeGenerator {
 
 				recipeDataList.add(recipeData);
 			}
+			
+			
 
 			for(int i = 0; i < bmgarray.length; i++){
 				try {

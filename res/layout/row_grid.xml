@@ -34,6 +34,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:background="#33000000"
         android:gravity="center"
         android:textSize="12sp" >
     </TextView>
@@ -44,7 +45,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:background="#D1EEEE"
+        android:background="#33EEEEEE"
         android:gravity="center"
         android:textSize="12sp" >
     </TextView>
@@ -55,6 +56,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:background="#33000000"
         android:gravity="center"
         android:textSize="12sp" >
     </TextView>

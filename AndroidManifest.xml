@@ -12,12 +12,12 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/cutlery"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.recipefy.IngredientInput"
-            android:label="@string/app_name" >
+            android:label="Recipefy" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,15 +26,15 @@
         </activity>
         <activity
             android:name="com.recipefy.RecipeActivity"
-            android:label="@string/title_activity_recipe" >
+            android:label="Recipe Suggestions" >
         </activity>
         <activity
             android:name="com.recipefy.SelectActivity"
-            android:label="@string/title_activity_select" >
+            android:label="Your Recipe Selection" >
         </activity>
         <activity
             android:name="com.recipefy.CookActivity"
-            android:label="@string/title_activity_cook" >
+            android:label="Preparation Steps" >
         </activity>
     </application>
 

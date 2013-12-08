@@ -47,6 +47,11 @@ public class IngredientInput extends FragmentActivity implements
 	private String[] _ingredientsArray;
 	protected List<String> _updateList;
 	protected IngredientInput input;
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu){
+		return false;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

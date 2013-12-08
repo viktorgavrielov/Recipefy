@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -28,11 +29,21 @@ public class CookActivity extends Activity {
 	private TimerData _timerdata1;
 	private TimerData _timerdata2;
 	private TimerData _timerdata3;
+	
+	// getting rid of the three dots
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu){
+		return false;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cook);
+		
+		// set background
+		findViewById(R.id.cookactivity).setBackgroundResource(R.drawable.background1);
+		
 		TextView text = (TextView) this.findViewById(R.id.stepsView);
 		//text.setText(Html.fromHtml("<b>Hello all</b> world!"));
 		CookingStepsGenerator csgenerator = new CookingStepsGenerator(getAssets());

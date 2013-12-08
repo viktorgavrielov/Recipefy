@@ -60,9 +60,9 @@ public class GridViewAdapter extends ArrayAdapter {
         ImageItem item = _data.get(position);
         holder.imageTitle.setText(item.getTitle());
         holder.image.setImageBitmap(BitmapFactory.decodeByteArray(item.getImage(), 0, item.getImage().length));
-        holder.info1.setText(item.getMatch()+" Match ");
-        holder.info2.setText(item.getTime()+" Min ");
-        holder.info3.setText(item.getRating()+" Rating ");
+        holder.info1.setText(" " + item.getMatch()+" Match ");
+        holder.info2.setText(" " + item.getTime()+" Min ");
+        holder.info3.setText(" " + item.getRating()+" Rating ");
         return row;
     }
  
