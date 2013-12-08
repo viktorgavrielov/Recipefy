@@ -14,5 +14,9 @@
     <string name="cookString">Cook</string>
     <string name="recipeString">Recipes</string>
     <string name="title_activity_cook">CookActivity</string>
+    <string name="defTimerString">-- : --</string>
+    <string name="defTimerString2">-- : --</string>
+    <string name="defTimerString3">-- : --</string>
+    <string name="testStepsString">1. Bring large pot of water to a boil, and stir in penne pasta.</string>
 
 </resources>

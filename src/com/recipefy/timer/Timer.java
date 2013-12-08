@@ -7,17 +7,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Timer extends Thread{
 
 	private TimerData timerdata;
-	private Button timerbutton;
+	private TextView timerbutton;
 	Activity cook;
 
-	public Timer(Activity cook, Button timerbutton, TimerData timerdata){
+	public Timer(Activity cook, TextView textView, TimerData timerdata){
 		this.timerdata = timerdata;
-		this.timerbutton = timerbutton;
+		this.timerbutton = textView;
 		this.cook = cook;		
 	}
 	
@@ -28,7 +29,7 @@ public class Timer extends Thread{
 	 * @param seconds
 	 * @return
 	 */
-	private String getTimeString(int seconds){
+	public String getTimeString(int seconds){
 		int hours = seconds / 3600;
 		seconds -= hours * 3600;
 		int minutes = seconds / 60;

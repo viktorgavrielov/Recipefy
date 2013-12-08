@@ -9,23 +9,84 @@
     tools:context=".CookActivity" >
 
     <TextView
-        android:id="@+id/cooking_step"
+        android:id="@+id/timer1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="89dp"
-        android:onClick="onClick"
         android:clickable="true"
-        android:text="@string/hello_world" />
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="@string/defTimerString" />
 
-    <Button
-        android:id="@+id/timer1"
+
+
+    <TextView
+        android:id="@+id/timer2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/cooking_step"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="21dp"
-        android:text="Button" />
+        android:layout_alignBaseline="@+id/timer3"
+        android:layout_alignBottom="@+id/timer3"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/defTimerString2" />
+
+    <TextView
+        android:id="@+id/timer3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/timer1"
+        android:layout_alignBottom="@+id/timer1"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:text="@string/defTimerString3" />
+    
+   
+       <TextView
+        android:id="@+id/startView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="@string/defTimerString"
+        android:visibility="invisible"
+        android:onClick="startTimer2" />
+          
+        <TextView
+        android:id="@+id/startView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignBaseline="@+id/startView3"
+        android:layout_alignBottom="@+id/startView3"
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="startTimer1"
+        android:text="@string/defTimerString" />
+        
+        <TextView
+        android:id="@+id/startView3"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/startView1"
+        android:layout_alignBottom="@+id/startView1"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:clickable="true"
+        android:onClick="startTimer3"
+        android:visibility="invisible"
+        android:text="@string/defTimerString3" />
+
+        <TextView
+            android:id="@+id/stepsView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/timer1"
+            android:layout_below="@+id/timer1"
+            android:layout_marginTop="159dp" />
 
 </RelativeLayout>

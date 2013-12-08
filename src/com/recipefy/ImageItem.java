@@ -14,6 +14,7 @@ public class ImageItem implements Serializable {
     private int _time;
     private String _match;
     private List<String> _ingredients;
+    private List<String> _currIngredients;
  
   
 	public ImageItem(byte[] image, String title) {
@@ -68,6 +69,14 @@ public class ImageItem implements Serializable {
     
     public List<String> getIngredients(){
     	return _ingredients;
+    }
+    
+    public void setCurrIngredients(List<String> ing){
+    	_currIngredients = ing;
+    }
+    
+    public List<String> getCurrIngredients(){
+    	return _currIngredients;
     }
 
 	

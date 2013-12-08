@@ -89,6 +89,7 @@ public class RecipeActivity extends Activity {
 					int adjLength = (int) Math.ceil(length*100);
 					item.setMatch(adjLength+"%");
 					item.setIngredients(recipe.getIngredientsNeeded());
+					item.setCurrIngredients(_ingredients);
 					imageItems.add(item);
 				}
 			}
