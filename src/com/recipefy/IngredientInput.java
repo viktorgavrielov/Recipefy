@@ -90,6 +90,7 @@ public class IngredientInput extends FragmentActivity implements
 	            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,_pantry);
 
 	            listView.setAdapter(adapter);
+	            listView.setBackgroundResource(R.drawable.customshape);
 	            //listView.setVisibility(View.GONE);
 	            _adapter = adapter;
 
@@ -149,6 +150,7 @@ public class IngredientInput extends FragmentActivity implements
 				  }
 				});
 		//setupUI(findViewById(R.id.ingredientcontainer));
+		autocomplete.setBackgroundResource(R.drawable.customshape);
 	}
 	
 
