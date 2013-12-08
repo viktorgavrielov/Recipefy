@@ -1,5 +1,7 @@
 package com.recipefy.timer;
 
+import com.recipefy.cooking.TimerData;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -45,7 +47,8 @@ public class TimerClickHandler implements View.OnClickListener{
 		.setPositiveButton("Remove",new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog,int id) {
 				timerText.setText("--:--");
-				timer.interrupt();
+				timer.setPaused(false);
+				timer.setTimerdata(new TimerData(0,0));
 				dialog.cancel();
 			}
 		})
@@ -56,7 +59,6 @@ public class TimerClickHandler implements View.OnClickListener{
 		})
 		.setNegativeButton((timer.isPaused() ? "Resume" : "Pause"),new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog,int id) {
-				// TODO: this should remove the button
 				timer.setPaused(!timer.isPaused());
 				dialog.cancel();
 			}

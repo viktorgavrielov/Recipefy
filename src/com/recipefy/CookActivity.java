@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.recipefy.cooking.CookingStep;
 import com.recipefy.cooking.CookingStepsGenerator;
@@ -58,6 +59,10 @@ public class CookActivity extends Activity {
 		_timer2 = new Timer(this, middleTimer, _timerdata2);
 		_timer3 = new Timer(this, rightTimer, _timerdata3);
 		
+		_timer1.start();
+		_timer2.start();
+		_timer3.start();
+		
 		leftTimer.setOnClickListener(new TimerClickHandler(this, _timer1, leftTimer));
 		middleTimer.setOnClickListener(new TimerClickHandler(this, _timer2, middleTimer));
 		rightTimer.setOnClickListener(new TimerClickHandler(this, _timer3, rightTimer));
@@ -84,14 +89,14 @@ public class CookActivity extends Activity {
 		TextView middleTimer = (TextView) this.findViewById(R.id.timer2);
 		TextView rightTimer = (TextView) this.findViewById(R.id.timer3);
 		if(leftTimer.getText().equals(getResources().getString(R.string.defTimerString1))) {
-			_timer1 = new Timer(this, leftTimer, timerdata);
-			_timer1.start();
+			_timer1.setTimerdata(timerdata);
 		} else if(middleTimer.getText().equals(getResources().getString(R.string.defTimerString2))) {
-			_timer2 = new Timer(this, middleTimer, timerdata);
-			_timer2.start();
+			_timer2.setTimerdata(timerdata);
 		} else if(rightTimer.getText().equals(getResources().getString(R.string.defTimerString3))) {
-			_timer3 = new Timer(this, rightTimer, timerdata);
-			_timer3.start();
+			_timer3.setTimerdata(timerdata);
+		} else {
+			Toast toast = Toast.makeText(this, "Sorry, all timers are being used.", Toast.LENGTH_SHORT);
+			toast.show();
 		}
 	}
 

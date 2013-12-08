@@ -55,47 +55,55 @@ public class Timer extends Thread{
 
 
 	@Override
-	public void run() {
+	public void run(){
 
-		// show toaster
-		cook.runOnUiThread(new Runnable() {
-			public void run() {
-				Toast toast = Toast.makeText(cook, "Timer started!", Toast.LENGTH_SHORT);
-				toast.show();
+		while(true){
+
+			int timeleft;
+
+			while((timeleft = timerdata.getInitialTime()) == 0){
+				try {
+					Thread.sleep(250);
+				} catch (InterruptedException e) {}
 			}
-		});
+			// show toaster
+			cook.runOnUiThread(new Runnable() {
+				public void run() {
+					Toast toast = Toast.makeText(cook, "Timer started!", Toast.LENGTH_SHORT);
+					toast.show();
+				}
+			});
 
-		int timeleft = timerdata.getInitialTime();
 
-		while(timeleft > 0){
 
-			if(!isPaused){
-				String timeString = getTimeString(timeleft);
+			while(timeleft > 0 && timerdata.getInitialTime() != 0){
 
-				final String updateString = timeString;
-				cook.runOnUiThread(new Runnable() {
-					public void run() {
-						timerbutton.setText(updateString);
-					}
-				});
-				timeleft--;
+				if(!isPaused){
+					String timeString = getTimeString(timeleft);
+
+					final String updateString = timeString;
+					cook.runOnUiThread(new Runnable() {
+						public void run() {
+							timerbutton.setText(updateString);
+						}
+					});
+					timeleft--;
+				}
+
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {}			
 			}
 
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				return;
-			}			
+
+			// DIALOG AFTER TIME RAN OUT
+			if(timerdata.getInitialTime() != 0){
+				showTimeUpDialog();
+			}
 		}
 
-
-		// DIALOG AFTER TIME RAN OUT
-		showTimeUpDialog();
-
-
-
 	}
-	
+
 	private void showTimeUpDialog(){
 		cook.runOnUiThread(new Runnable() {
 			public void run() {
@@ -111,26 +119,23 @@ public class Timer extends Thread{
 				.setCancelable(false)				
 				.setPositiveButton("Snooze " + getTimeString(timerdata.getSnoozeTime()),new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
-						Timer timer = new Timer(cook, timerbutton, new TimerData(timerdata.getSnoozeTime(),(int) ((double) timerdata.getSnoozeTime()/10)));
-						timerbutton.setOnClickListener(new TimerClickHandler(cook, timer, timerbutton));
-						timer.start();
+						timerdata.setSnoozeTime((int) ((double) timerdata.getSnoozeTime()/10));
+						timerdata.setInitialTime(timerdata.getSnoozeTime());
+						//timerbutton.setOnClickListener(new TimerClickHandler(cook, timer, timerbutton));
 						dialog.cancel();
 					}
 				})
 				.setNeutralButton("Snooze custom", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
-						// TODO: this should open the custom timer dialog
-						// TODO: and also remove the current button?
 						dialog.cancel();
 						AlertDialog.Builder timepickerDialogBuilder = numpickerAlertGenerator(Timer.this);
 						AlertDialog timepickerdialog = timepickerDialogBuilder.create();
 						timepickerdialog.show();				
-						
+
 					}
 				})
 				.setNegativeButton("Close",new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
-						// TODO: this should remove the button
 						timerbutton.setText("--:--");
 						dialog.cancel();
 					}
@@ -141,7 +146,7 @@ public class Timer extends Thread{
 
 				// show it
 				alertDialog.show();
-				
+
 			}
 
 		});
@@ -167,9 +172,11 @@ public class Timer extends Thread{
 				int seconds = timepicker.getCurrentHour() * 3600 + timepicker.getCurrentMinute() * 60;
 				dialog.cancel();
 				if(seconds > 0){
-					Timer timer = new Timer(cook, timerbutton, new TimerData(seconds,(int) ((double) seconds/10)));
-					timerbutton.setOnClickListener(new TimerClickHandler(cook, timer, timerbutton));
-					timer.start();
+					timerdata.setSnoozeTime((int)((double) seconds/10));
+					timerdata.setInitialTime(seconds);
+					//Timer timer = new Timer(cook, timerbutton, new TimerData(seconds,(int) ((double) seconds/10)));
+					//timerbutton.setOnClickListener(new TimerClickHandler(cook, timer, timerbutton));
+					//timer.start();
 				}				
 			}
 		})
@@ -196,4 +203,11 @@ public class Timer extends Thread{
 		this.isPaused = isPaused;
 	}
 
+	public TimerData getTimerdata() {
+		return timerdata;
+	}
+
+	public void setTimerdata(TimerData timerdata) {
+		this.timerdata = timerdata;
+	}
 }
