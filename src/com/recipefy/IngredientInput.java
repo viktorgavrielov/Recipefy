@@ -109,7 +109,7 @@ public class IngredientInput extends FragmentActivity implements
 			                          }
 			                          adapter.notifyDataSetChanged();
 			                      }
-			                  });
+			                  },this);
 			  listView.setOnTouchListener(touchListener);
 			  listView.setOnScrollListener(touchListener.makeScrollListener());
 
@@ -139,6 +139,7 @@ public class IngredientInput extends FragmentActivity implements
 				          //_pantry.add(autocomplete.getText().toString());
 				          toPass.add(autocomplete.getText().toString());
 				          input.updateAdapater(toPass);
+				          autocomplete.setText("");
 				          return true;
 				        default:
 				          break;
@@ -147,7 +148,7 @@ public class IngredientInput extends FragmentActivity implements
 				    return false;
 				  }
 				});
-	
+		//setupUI(findViewById(R.id.ingredientcontainer));
 	}
 	
 
@@ -197,7 +198,7 @@ public class IngredientInput extends FragmentActivity implements
 		args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
 		fragment.setArguments(args);
 		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.container, fragment).commit();
+				.replace(R.id.ingredientcontainer, fragment).commit();
 		return true;
 	}
 	

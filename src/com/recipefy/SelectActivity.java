@@ -39,18 +39,27 @@ public class SelectActivity extends Activity {
 		final ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this,android.R.layout.simple_list_item_1,_toPass);
 		ListView listView = (ListView) findViewById(R.id.matchlist);
 		listView.setAdapter(adapter);
-		System.out.println("Size of curr ingred is: "+_item.getCurrIngredients().size());
+		List<String> boldList = new ArrayList<String>();
+		List<String> normalList = new ArrayList<String>();
 		for(String item:_item.getIngredients()){
+			boolean contains = false;
 			for(String food: _item.getCurrIngredients()){
-				if(food.contains(item)){
+				if(item.contains(food)){
 					System.out.println("bold item");
 					String toAdd = "<b>"+item+"</b>";
-					adapter.add(Html.fromHtml(toAdd));
-				}
-				else{
-					adapter.add(item);
+					boldList.add(toAdd);
+					contains = true;
 				}
 			}
+			if(!contains){
+				normalList.add(item);
+			}
+		}
+		for(String item:boldList){
+			adapter.add(Html.fromHtml(item));
+		}
+		for(String item:normalList){
+			adapter.add(item);
 		}
 	}
 
