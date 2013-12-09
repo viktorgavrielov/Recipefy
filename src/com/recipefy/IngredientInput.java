@@ -60,18 +60,18 @@ public class IngredientInput extends FragmentActivity implements
 
 		// Set up the action bar to show a dropdown list.
 		final ActionBar actionBar = getActionBar();
-		actionBar.setDisplayShowTitleEnabled(false);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		actionBar.setDisplayShowTitleEnabled(true);
+		//actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 		// Set up the dropdown list navigation in the action bar.
-		actionBar.setListNavigationCallbacks(
+		//actionBar.setListNavigationCallbacks(
 		// Specify a SpinnerAdapter to populate the dropdown list.
-				new ArrayAdapter<String>(getActionBarThemedContextCompat(),
-						android.R.layout.simple_list_item_1,
-						android.R.id.text1, new String[] {
-								getString(R.string.title_section1),
-								getString(R.string.title_section2),
-								getString(R.string.title_section3), }), this);
+			//	new ArrayAdapter<String>(getActionBarThemedContextCompat(),
+				//		android.R.layout.simple_list_item_1,
+					//	android.R.id.text1, new String[] {
+						//		getString(R.string.title_section1),
+							//	getString(R.string.title_section2),
+								//getString(R.string.title_section3), }), this);
 		ListView listView= (ListView) findViewById(R.id.ingredientslist);
 		_pantry = new ArrayList<String>();
 		input = this;

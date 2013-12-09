@@ -17,6 +17,15 @@
         android:layout_height="100dp" >
     </ImageView>
     
+     <TextView
+        android:id="@+id/text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:textSize="12sp" >
+    </TextView>
+    
     <TableLayout 
     android:id="@+id/tableLayout1"
     android:layout_width="fill_parent"
@@ -67,13 +76,6 @@
     
     </TableLayout>
     
-     <TextView
-        android:id="@+id/text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:textSize="12sp" >
-    </TextView>
+    
  
 </LinearLayout>

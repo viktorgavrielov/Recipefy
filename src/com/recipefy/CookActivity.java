@@ -70,6 +70,7 @@ public class CookActivity extends Activity {
 			@Override
 			public View makeView() {
 			TextView t = new TextView(CookActivity.this);
+			t.setTextSize(16);
 			t.setOnTouchListener(new TouchListener(text));
 			t.setGravity(Gravity.CENTER);
 			return t;
