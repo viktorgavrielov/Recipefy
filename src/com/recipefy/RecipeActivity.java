@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -61,6 +62,25 @@ public class RecipeActivity extends Activity {
 	public void asyncCall(ArrayList<ImageItem> items){
 		_customGridAdapter = new GridViewAdapter(this, R.layout.row_grid, items);
 		_gridView.setAdapter(_customGridAdapter);
+		_customGridAdapter.sort(new Comparator<ImageItem>(){
+
+			@Override
+			public int compare(ImageItem item1, ImageItem item2) {
+				//return new Float(item1.getRating()).compareTo(item2.getRating());
+				if(item1.getRating()<item2.getRating()){
+					return 1;
+				}
+				else if(item1.getRating()>item2.getRating()){
+					return -1;
+				}
+				else{
+					return 0;
+				}
+			}
+			
+		});
+		_customGridAdapter.notifyDataSetChanged();
+		_customGridAdapter.fixOrder();
 	}
 
 	private ArrayList<ImageItem> getData() {
