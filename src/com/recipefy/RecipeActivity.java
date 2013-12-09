@@ -35,6 +35,9 @@ public class RecipeActivity extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu){
 		return false;
 	}
+	
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,7 +63,7 @@ public class RecipeActivity extends Activity {
 	}
 	
 	public void asyncCall(ArrayList<ImageItem> items){
-		_customGridAdapter = new GridViewAdapter(this, R.layout.row_grid, items);
+		_customGridAdapter = new GridViewAdapter(this, R.layout.row_grid, items, _gridView);
 		_gridView.setAdapter(_customGridAdapter);
 		_customGridAdapter.sort(new Comparator<ImageItem>(){
 
@@ -80,59 +83,10 @@ public class RecipeActivity extends Activity {
 			
 		});
 		_customGridAdapter.notifyDataSetChanged();
-		_customGridAdapter.fixOrder();
+		//_customGridAdapter.fixOrder();
 	}
 
-	private ArrayList<ImageItem> getData() {
-		final ArrayList<ImageItem> imageItems = new ArrayList<ImageItem>();
-		_ingredients = getIntent().getStringArrayListExtra("ingredients");
-		RecipeGenerator generator = new RecipeGenerator();
-		HashMap<FilterValue,List<String>> map = new HashMap<FilterValue,List<String>>();
-		map.put(FilterValue.ALLOWED_INGREDIENT, _ingredients);
-		List<String> testVals = map.get(FilterValue.ALLOWED_INGREDIENT);
-		System.out.println("Testvals: "+testVals);
-		for(String item:testVals){
-			System.out.println("My item is: "+item);
-		}
-		try {
-			List<RecipeData> data =generator.getRecipes(map);
-			System.out.println("DATA SIZE: " + data.size());
-			for(RecipeData recipe:data){
-				if(recipe.getPrepTimeSecs()!=0&&recipe.getRating()!=0.0f){
-					Bitmap image = recipe.getImageSmall();
-					ByteArrayOutputStream stream = new ByteArrayOutputStream();
-					image.compress(Bitmap.CompressFormat.PNG, 100, stream);
-					byte[] byteArray = stream.toByteArray();
-					ImageItem item = new ImageItem(byteArray,recipe.getRecipeName());
-					item.setRating(recipe.getRating());
-					item.setTime(recipe.getPrepTimeSecs()/60);
-					float length = (float)_ingredients.size()/(float)recipe.getIngredientsNeeded().size();
-					int adjLength = (int) Math.ceil(length*100);
-					item.setMatch(adjLength+"%");
-					item.setIngredients(recipe.getIngredientsNeeded());
-					item.setCurrIngredients(_ingredients);
-					imageItems.add(item);
-				}
-			}
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
-		return imageItems;
-
-	}
-
+	
 
 	private class getRecipesTask extends AsyncTask<Integer, String, ArrayList<ImageItem>> {
 		

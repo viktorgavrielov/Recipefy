@@ -70,9 +70,9 @@ public class CookActivity extends Activity {
 			@Override
 			public View makeView() {
 			TextView t = new TextView(CookActivity.this);
-			t.setTextSize(16);
-			t.setOnTouchListener(new TouchListener(text));
-			t.setGravity(Gravity.CENTER);
+			t.setTextSize(18);
+			//t.setOnTouchListener(new TouchListener(text));
+			t.setGravity(Gravity.LEFT);
 			return t;
 			}
 			});
@@ -89,6 +89,9 @@ public class CookActivity extends Activity {
 		TextView leftTimer = (TextView) this.findViewById(R.id.timer1);
 		TextView middleTimer = (TextView) this.findViewById(R.id.timer2);
 		TextView rightTimer = (TextView) this.findViewById(R.id.timer3);
+		leftTimer.setTextSize(20);
+		middleTimer.setTextSize(20);
+		rightTimer.setTextSize(20);
 		
 		_timer1 = new Timer(this, leftTimer, _timerdata1);
 		_timer2 = new Timer(this, middleTimer, _timerdata2);
@@ -182,6 +185,9 @@ public class CookActivity extends Activity {
 		TextView start1 = (TextView) this.findViewById(R.id.startView1);
 		TextView start2 = (TextView) this.findViewById(R.id.startView2);
 		TextView start3 = (TextView) this.findViewById(R.id.startView3);
+		start1.setTextSize(20);
+		start2.setTextSize(20);
+		start3.setTextSize(20);
 		start1.setVisibility(View.INVISIBLE);
 		start2.setVisibility(View.INVISIBLE);
 		start3.setVisibility(View.INVISIBLE);

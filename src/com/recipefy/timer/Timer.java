@@ -98,6 +98,7 @@ public class Timer extends Thread{
 
 			// DIALOG AFTER TIME RAN OUT
 			if(timerdata.getInitialTime() != 0){
+				timerdata.setInitialTime(0);
 				showTimeUpDialog();
 			}
 		}
@@ -119,8 +120,9 @@ public class Timer extends Thread{
 				.setCancelable(false)				
 				.setPositiveButton("Snooze " + getTimeString(timerdata.getSnoozeTime()),new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
-						timerdata.setSnoozeTime((int) ((double) timerdata.getSnoozeTime()/10));
-						timerdata.setInitialTime(timerdata.getSnoozeTime());
+						int oldSnoozeTime = timerdata.getSnoozeTime();
+						timerdata.setSnoozeTime((int) ((double) oldSnoozeTime/10));
+						timerdata.setInitialTime(oldSnoozeTime);
 						//timerbutton.setOnClickListener(new TimerClickHandler(cook, timer, timerbutton));
 						dialog.cancel();
 					}

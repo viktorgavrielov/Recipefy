@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class GridViewAdapter extends ArrayAdapter {
+	private GridView _gridview;
 	private Context _context;
     private int _layoutResourceId;
     private ArrayList<ImageItem> _data = new ArrayList<ImageItem>();
@@ -22,12 +24,13 @@ public class GridViewAdapter extends ArrayAdapter {
   
  
     public GridViewAdapter(Context context, int layoutResourceId,
-            ArrayList<ImageItem> data) {
+            ArrayList<ImageItem> data, GridView gridview) {
         super(context, layoutResourceId, data);
         _layoutResourceId = layoutResourceId;
         _context = context;
         _data = data;
         _map = new HashMap<String,ViewHolder>();
+        _gridview = gridview;
     }
  
     @Override
@@ -55,12 +58,18 @@ public class GridViewAdapter extends ArrayAdapter {
         }
  
         ImageItem item = _data.get(position);
-        holder.imageTitle.setText(item.getTitle());
+        int balsamiclength = "Balsamic Glazed Pearl Onions".length();
+        if(item.getTitle().length() < balsamiclength){
+        	holder.imageTitle.setText(item.getTitle());
+        } else {
+        	holder.imageTitle.setText(item.getTitle().substring(0, balsamiclength - 6) + "...");
+        }
         holder.image.setImageBitmap(BitmapFactory.decodeByteArray(item.getImage(), 0, item.getImage().length));
         holder.info1.setText(" " + item.getMatch()+" Match ");
         holder.info2.setText(" " + item.getTime()+" Min ");
         holder.info3.setText(" " + item.getRating()+" Rating ");
         holder.name = item.getTitle();
+        System.err.println("HOLDER NAME " + holder.name);
         _map.put(holder.name, holder);		
         return row;
     }
@@ -85,6 +94,9 @@ public class GridViewAdapter extends ArrayAdapter {
 		for(int i=0;i<this.getCount();i++){
 			items.add((ImageItem)this.getItem(i));
 		}
+		for(ImageItem item : items){
+			System.err.println("ITEM NAME: " + item.getTitle());
+		}
 		for(int i=0;i<items.size();i++){
 			ViewHolder holder = _map.get(items.get(i).getTitle());
 			holder.image.setOnClickListener(new RecipeListener(i));
@@ -94,19 +106,24 @@ public class GridViewAdapter extends ArrayAdapter {
 	
 	private class RecipeListener implements View.OnClickListener{
 		private int _position;
-		
+		private ImageItem _imageitem;
 		public RecipeListener(int pos){
 			_position = pos;
+			_imageitem = _data.get(_position);
 		}
 
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			GridViewAdapter.this.selectRecipe(_data.get(_position));
+			//GridViewAdapter.this.fixOrder();		
+			_gridview.setAdapter(GridViewAdapter.this);
+			GridViewAdapter.this.selectRecipe(_imageitem);
 			
 		}
 		
 
 		
 	}
+	
+	
 }

@@ -34,7 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class IngredientInput extends FragmentActivity implements
-		ActionBar.OnNavigationListener, TextWatcher {
+ActionBar.OnNavigationListener, TextWatcher {
 
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
@@ -47,7 +47,7 @@ public class IngredientInput extends FragmentActivity implements
 	private String[] _ingredientsArray;
 	protected List<String> _updateList;
 	protected IngredientInput input;
-	
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu){
 		return false;
@@ -66,65 +66,65 @@ public class IngredientInput extends FragmentActivity implements
 		// Set up the dropdown list navigation in the action bar.
 		//actionBar.setListNavigationCallbacks(
 		// Specify a SpinnerAdapter to populate the dropdown list.
-			//	new ArrayAdapter<String>(getActionBarThemedContextCompat(),
-				//		android.R.layout.simple_list_item_1,
-					//	android.R.id.text1, new String[] {
-						//		getString(R.string.title_section1),
-							//	getString(R.string.title_section2),
-								//getString(R.string.title_section3), }), this);
+		//	new ArrayAdapter<String>(getActionBarThemedContextCompat(),
+		//		android.R.layout.simple_list_item_1,
+		//	android.R.id.text1, new String[] {
+		//		getString(R.string.title_section1),
+		//	getString(R.string.title_section2),
+		//getString(R.string.title_section3), }), this);
 		ListView listView= (ListView) findViewById(R.id.ingredientslist);
 		_pantry = new ArrayList<String>();
 		input = this;
 		try{
-	        InputStream instream = getAssets().open("ingredients.txt");
+			InputStream instream = getAssets().open("ingredients.txt");
 
-	            InputStreamReader inputreader = new InputStreamReader(instream);
-	            BufferedReader buffreader = new BufferedReader(inputreader);
+			InputStreamReader inputreader = new InputStreamReader(instream);
+			BufferedReader buffreader = new BufferedReader(inputreader);
 
 
-	            ArrayList<String> lines = new ArrayList<String>();
-	            boolean hasNextLine =true;
-	            while (hasNextLine){
-	                String line =  buffreader.readLine();
-	                lines.add(line);
-	                hasNextLine = line != null;
+			ArrayList<String> lines = new ArrayList<String>();
+			boolean hasNextLine =true;
+			while (hasNextLine){
+				String line =  buffreader.readLine();
+				lines.add(line);
+				hasNextLine = line != null;
 
-	            }
-	            lines.remove(lines.size()-1);
-	            _ingredients = lines;
-	            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,_pantry);
+			}
+			lines.remove(lines.size()-1);
+			_ingredients = lines;
+			final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,_pantry);
 
-	            listView.setAdapter(adapter);
-	            listView.setBackgroundResource(R.drawable.customshape);
-	            //listView.setVisibility(View.GONE);
-	            _adapter = adapter;
+			listView.setAdapter(adapter);
+			listView.setBackgroundResource(R.drawable.customshape);
+			//listView.setVisibility(View.GONE);
+			_adapter = adapter;
 
-	        instream.close();
-	        SwipeDismissListener touchListener =
-			          new SwipeDismissListener(
-			                  listView,
-			                  new SwipeDismissListener.DismissCallbacks() {
-			                	  
-			                	  public boolean canDismiss(int position){
-			                		  return true;
-			                	  }
-			                      public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-			                          for (int position : reverseSortedPositions) {
-			                              adapter.remove(adapter.getItem(position));
-			                              //_pantry.remove(position);
-			                          }
-			                          adapter.notifyDataSetChanged();
-			                      }
-			                  },this);
-			  listView.setOnTouchListener(touchListener);
-			  listView.setOnScrollListener(touchListener.makeScrollListener());
+			instream.close();
+			SwipeDismissListener touchListener =
+					new SwipeDismissListener(
+							listView,
+							new SwipeDismissListener.DismissCallbacks() {
 
-	    }
-	    catch(java.io.FileNotFoundException e){
+								public boolean canDismiss(int position){
+									return true;
+								}
+								public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+									for (int position : reverseSortedPositions) {
+										adapter.remove(adapter.getItem(position));
+										//_pantry.remove(position);
+									}
+									adapter.notifyDataSetChanged();
+								}
+							},this);
+			listView.setOnTouchListener(touchListener);
+			listView.setOnScrollListener(touchListener.makeScrollListener());
 
-	    }catch(java.io.IOException e){
+		}
+		catch(java.io.FileNotFoundException e){
 
-	    }	
+		}catch(java.io.IOException e){
+
+		}	
 		//setTheme(android.R.style.Theme);
 		final AutoCompleteTextView autocomplete = (AutoCompleteTextView) findViewById(R.id.ingredientsBar);
 		//final String[] testStrings = new String[] {"chocolate","cake","chicken","chowder","apple","banana","paper","test"};
@@ -135,30 +135,30 @@ public class IngredientInput extends FragmentActivity implements
 		autocomplete.addTextChangedListener(this);
 		autocomplete.setAdapter(autoAdapter);
 		autocomplete.setOnKeyListener(new OnKeyListener() {
-			  public boolean onKey(View view, int keyCode, KeyEvent event){
-				    if (event.getAction() == KeyEvent.ACTION_DOWN){
-				      switch (keyCode)
-				      {
-				        case KeyEvent.KEYCODE_DPAD_CENTER:
-				        case KeyEvent.KEYCODE_ENTER:
-				          List<String> toPass = new ArrayList<String>();
-				          //_pantry.add(autocomplete.getText().toString());
-				          toPass.add(autocomplete.getText().toString());
-				          input.updateAdapater(toPass);
-				          autocomplete.setText("");
-				          return true;
-				        default:
-				          break;
-				      }
-				    }
-				    return false;
-				  }
-				});
+			public boolean onKey(View view, int keyCode, KeyEvent event){
+				if (event.getAction() == KeyEvent.ACTION_DOWN){
+					switch (keyCode)
+					{
+					case KeyEvent.KEYCODE_DPAD_CENTER:
+					case KeyEvent.KEYCODE_ENTER:
+						List<String> toPass = new ArrayList<String>();
+						//_pantry.add(autocomplete.getText().toString());
+						toPass.add(autocomplete.getText().toString());
+						input.updateAdapater(toPass);
+						autocomplete.setText("");
+						return true;
+					default:
+						break;
+					}
+				}
+				return false;
+			}
+		});
 		//setupUI(findViewById(R.id.ingredientcontainer));
 		autocomplete.setBackgroundResource(R.drawable.customshape);
 		autocomplete.setHint(R.string.ingredients);
 	}
-	
+
 
 	/**
 	 * Backward-compatible version of {@link ActionBar#getThemedContext()} that
@@ -177,10 +177,10 @@ public class IngredientInput extends FragmentActivity implements
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		// Restore the previously serialized current dropdown position.
-		if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
-			getActionBar().setSelectedNavigationItem(
-					savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
-		}
+		//		if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
+		//			getActionBar().setSelectedNavigationItem(
+		//					savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
+		//		}
 	}
 
 	@Override
@@ -206,18 +206,18 @@ public class IngredientInput extends FragmentActivity implements
 		args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
 		fragment.setArguments(args);
 		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.ingredientcontainer, fragment).commit();
+		.replace(R.id.ingredientcontainer, fragment).commit();
 		return true;
 	}
-	
-	
+
+
 	public void updateAdapater(List<String> toAdd){
 		//_adapter.clear();
 		for(String item:toAdd){
 			_adapter.insert(item, _adapter.getCount());
 		}
 		_adapter.notifyDataSetChanged();
-		
+
 	}
 
 	/**
@@ -250,7 +250,7 @@ public class IngredientInput extends FragmentActivity implements
 	@Override
 	public void afterTextChanged(Editable arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
@@ -258,16 +258,16 @@ public class IngredientInput extends FragmentActivity implements
 	public void beforeTextChanged(CharSequence s, int start, int count,
 			int after) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
 	protected void onPause(){
 		super.onPause();
@@ -278,51 +278,51 @@ public class IngredientInput extends FragmentActivity implements
 		}
 		editor.commit();
 	}
-	
+
 	public void recipefy(View view){
 		Intent intent = new Intent(this,RecipeActivity.class);
 		intent.putStringArrayListExtra("ingredients", _pantry);
 		this.startActivity(intent);
 	}
-	
-	 /**
-     * Method to hide the Android soft keyboard when you click the screen.
-     * @param activity
-     */
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-    }
-    
-    /**
-     * Method that sets up the keyboard disappearance when any other view is clicked. 
-     * @param view
-     */
-    public void setupUI(View view) {
-        //Set up touch listener for non-text box views to hide keyboard.
-        if(!(view instanceof EditText)) {
 
-            view.setOnTouchListener(new OnTouchListener() {
+	/**
+	 * Method to hide the Android soft keyboard when you click the screen.
+	 * @param activity
+	 */
+	public static void hideSoftKeyboard(Activity activity) {
+		InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+	}
 
-                public boolean onTouch(View v, MotionEvent event) {
-                    hideSoftKeyboard(input);
-                    return false;
-                }
+	/**
+	 * Method that sets up the keyboard disappearance when any other view is clicked. 
+	 * @param view
+	 */
+	public void setupUI(View view) {
+		//Set up touch listener for non-text box views to hide keyboard.
+		if(!(view instanceof EditText)) {
 
-            });
-        }
-        
+			view.setOnTouchListener(new OnTouchListener() {
 
-        //If a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup) {
+				public boolean onTouch(View v, MotionEvent event) {
+					hideSoftKeyboard(input);
+					return false;
+				}
 
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+			});
+		}
 
-                View innerView = ((ViewGroup) view).getChildAt(i);
 
-                setupUI(innerView);
-            }
-        }
-    }
+		//If a layout container, iterate over children and seed recursion.
+		if (view instanceof ViewGroup) {
+
+			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+
+				View innerView = ((ViewGroup) view).getChildAt(i);
+
+				setupUI(innerView);
+			}
+		}
+	}
 
 }

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -20,10 +20,13 @@
     <style name="AppTheme" parent="AppBaseTheme">
     <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
     <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+    <item name="android:listViewStyle">@style/RobotoListViewStyle</item>
+    <item name="android:autoCompleteTextViewStyle">@style/RobotoAutoCompleteTextViewStyle</item>
 </style>
 
 <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
     <item name="android:fontFamily">sans-serif-light</item>
+    <item name="android:textStyle">bold</item>
 </style>
 
 <style name="customButton1" parent="android:Widget">
@@ -32,6 +35,18 @@
 
 <style name="RobotoButtonStyle" parent="android:Widget.Holo.Button">
     <item name="android:fontFamily">sans-serif-light</item>
+    <item name="android:textStyle">bold</item>
+    
+</style>
+<style name="RobotoListViewStyle" parent="android:Widget.ListView">
+    <item name="android:fontFamily">sans-serif-light</item>
+    <item name="android:textStyle">bold</item>
+    
+</style>
+<style name="RobotoAutoCompleteTextViewStyle" parent="android:Widget.AutoCompleteTextView">
+    <item name="android:fontFamily">sans-serif-light</item>
+    <item name="android:textStyle">bold</item>
+    
 </style>
 
 <style name="MyTheme" parent="android:style/Theme.Holo.Light">

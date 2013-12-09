@@ -95,6 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/timer1"
             android:layout_below="@+id/timer1"
-            android:layout_marginTop="159dp" />
+            android:gravity="left"
+            android:layout_marginTop="120dp" />
 
 </RelativeLayout>
